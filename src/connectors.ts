@@ -13,27 +13,29 @@ export const Injected = new InjectedConnector({
 });
 
 const activateInjectedProvider = (providerName: "MetaMask" | "CoinBase") => {
-  const { ethereum } = window as any;
+  if (typeof window !== "undefined") {
+    const { ethereum } = window as any;
 
-  if (!ethereum?.providers) {
-    return undefined;
-  }
+    if (!ethereum?.providers) {
+      return undefined;
+    }
 
-  let provider;
-  switch (providerName) {
-    case "CoinBase":
-      provider = ethereum.providers.find(
-        ({ isCoinbaseWallet }: any) => isCoinbaseWallet
-      );
-      break;
-    case "MetaMask":
-      provider = ethereum.providers.find(({ isMetaMask }: any) => isMetaMask);
-      break;
-  }
+    let provider;
+    switch (providerName) {
+      case "CoinBase":
+        provider = ethereum.providers.find(
+          ({ isCoinbaseWallet }: any) => isCoinbaseWallet
+        );
+        break;
+      case "MetaMask":
+        provider = ethereum.providers.find(({ isMetaMask }: any) => isMetaMask);
+        break;
+    }
 
-  if (provider) {
-    ethereum.setSelectedProvider(provider);
-  }
+    if (provider) {
+      ethereum.setSelectedProvider(provider);
+    }
+  } else return;
 };
 
 activateInjectedProvider("MetaMask");
@@ -52,8 +54,10 @@ const CoinbaseWallet = new WalletLinkConnector({
   supportedChainIds: [1, 3, 4, 5, 42],
 });
 
-export const connectors = {
+const connectors = {
   metamask: Injected,
   walletConnect: WalletConnect,
   coinbaseWallet: CoinbaseWallet,
 };
+
+export default connectors;

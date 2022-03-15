@@ -1,8 +1,8 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-
-import { Web3ReactProvider } from "@web3-react/core";
 import { ethers } from "ethers";
+import { ToastProvider } from "react-toast-notifications";
+import { Web3ReactProvider } from "@web3-react/core";
 
 const getLibrary = (provider: any) => {
   const library = new ethers.providers.Web3Provider(provider);
@@ -13,8 +13,9 @@ const getLibrary = (provider: any) => {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      {" "}
-      <Component {...pageProps} />
+      <ToastProvider autoDismiss={true} autoDismissTimeout={2000}>
+        <Component {...pageProps} />
+      </ToastProvider>
     </Web3ReactProvider>
   );
 }
